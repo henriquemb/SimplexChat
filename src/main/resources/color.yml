@@ -1,12 +1,3 @@
-#
-# If you server isn't 1.16, this change will take no effect
-# Disable if you want to remove RGB from /chatcolor
-# It will only allow vanilla color codes instead
-#
-enable_rgb: true
-#
-# Messages
-#
 # Console can't choose a color
 only_players: '&cAvaliable only for players!'
 # No argument provided on command

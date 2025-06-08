@@ -53,11 +53,8 @@ public class Cores implements CommandExecutor {
 	private boolean validate(String hexColor) {
         Matcher rgbMatcher = RGB.matcher(hexColor);
         Matcher legacyMatcher = LEGACY.matcher(hexColor);
-        
-        if (SimplexChat.colorsConfig.getBoolean("enable_rgb") && rgbMatcher.matches()) {
-        	return true;
-        }
-        return legacyMatcher.matches();
+
+        return rgbMatcher.matches() || legacyMatcher.matches();
     }
 
 	private static String getString(String path) {

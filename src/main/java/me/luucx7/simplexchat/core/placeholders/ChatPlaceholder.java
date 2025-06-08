@@ -131,9 +131,6 @@ public class ChatPlaceholder extends PlaceholderExpansion {
 	private boolean validateRGB(String input) {
 		Matcher matcher = Cores.RGB.matcher(input);
 
-		if (SimplexChat.colorsConfig.getBoolean("enable_rgb") && matcher.matches()) {
-			return true;
-		}
-		return false;
+		return matcher.matches();
 	}
 }

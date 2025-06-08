@@ -1,19 +1,17 @@
 package me.luucx7.simplexchat.commands;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.luucx7.simplexchat.SimplexChat;
 import me.luucx7.simplexchat.core.api.ChatPlayer;
+import me.luucx7.simplexchat.core.managers.JogadorManager;
+import me.luucx7.simplexchat.core.utils.MessageSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.luucx7.simplexchat.SimplexChat;
-import me.luucx7.simplexchat.core.managers.JogadorManager;
-import me.luucx7.simplexchat.core.model.Jogador;
-import net.md_5.bungee.api.ChatColor;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Cores implements CommandExecutor {
 	    
@@ -23,15 +21,15 @@ public class Cores implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender s, Command c, String arg, String[] args) {
 		if (!(s instanceof Player)) {
-			s.sendMessage(getString("only_players"));
+			MessageSender.sendMessage(s, getString("only_players"));
 			return true;
 		}
 		if (!s.hasPermission("chat.setcolor")) {
-			s.sendMessage(getString("no_permission"));
+			MessageSender.sendMessage(s, getString("no_permission"));
 			return true;
 		}
 		if (args.length==0) {
-			s.sendMessage(getString("no_arg"));
+			MessageSender.sendMessage(s, getString("no_arg"));
 			return true;
 		}
 		Player player = (Player) s;
@@ -39,16 +37,16 @@ public class Cores implements CommandExecutor {
 		
         if (args[0].equalsIgnoreCase("limpar") || args[0].equalsIgnoreCase("clear")) {
             jog.setColor("");
-            s.sendMessage(getString("removed"));
+            MessageSender.sendMessage(s, getString("removed"));
             return true;
         }
 
         if(!validate(args[0])) {
-        	s.sendMessage(getString("invalid"));
+        	MessageSender.sendMessage(s, getString("invalid"));
         	return true;
         }
         jog.setColor(args[0]);
-        s.sendMessage(PlaceholderAPI.setPlaceholders((Player) s, getString("success")));
+        MessageSender.sendMessage(s, PlaceholderAPI.setPlaceholders((Player) s, getString("success")));
 		return false;
 	}
 
@@ -63,7 +61,7 @@ public class Cores implements CommandExecutor {
     }
 
 	private static String getString(String path) {
-		return ChatColor.translateAlternateColorCodes('&', SimplexChat.colorsConfig.getString(path));
+		return SimplexChat.colorsConfig.getString(path);
 	}
 
 }

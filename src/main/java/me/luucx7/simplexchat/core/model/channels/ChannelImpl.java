@@ -2,11 +2,9 @@ package me.luucx7.simplexchat.core.model.channels;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.configuration.file.FileConfiguration;
-
 import me.luucx7.simplexchat.SimplexChat;
 import me.luucx7.simplexchat.core.api.Channel;
-import net.md_5.bungee.api.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class ChannelImpl implements Channel {
 
@@ -41,7 +39,7 @@ public class ChannelImpl implements Channel {
 		this.restrict = config.getBoolean(name + ".restrict");
 		this.radius = config.getInt(name + ".radius");
 		this.permission = config.getString(name + ".permission");
-		this.format = ChatColor.translateAlternateColorCodes('&', config.getString(name + ".format"));
+		this.format = config.getString(name + ".format");
 		this.actionbar = config.getBoolean(name + ".actionbar");
 	}
 

@@ -1,22 +1,18 @@
 package me.luucx7.simplexchat.core.model;
 
-import java.util.ArrayList;
-
-import de.themoep.minedown.MineDown;
 import github.scarsz.discordsrv.DiscordSRV;
-import me.luucx7.simplexchat.core.managers.MessageManager;
-import me.luucx7.simplexchat.core.nms.ActionBar;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.luucx7.simplexchat.SimplexChat;
 import me.luucx7.simplexchat.core.api.Channel;
+import me.luucx7.simplexchat.core.managers.MessageManager;
+import me.luucx7.simplexchat.core.nms.ActionBar;
+import me.luucx7.simplexchat.core.utils.MessageSender;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
 
 public class Mensagem {
 
@@ -24,7 +20,7 @@ public class Mensagem {
 	String[] mensagem;
 	String mensagemString;
 	String consoleMsg;
-	BaseComponent[] mensagemFinal;
+	String mensagemFinal;
 	Channel canal;
 	int quantia;
 	boolean isValid;
@@ -44,13 +40,13 @@ public class Mensagem {
 		String msg = String.join(" ", mensagem);
 
 		if (SimplexChat.instance.getConfig().getBoolean("modules.chatformat.spam.enable") && !sender.hasPermission("chat.chatformat.spam.bypass") && MessageManager.isSpam(mensagem)) {
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', SimplexChat.instance.getConfig().getString("modules.chatformat.spam.message")));
+			MessageSender.sendMessage(sender, SimplexChat.instance.getConfig().getString("modules.chatformat.spam.message"));
 			return this;
 		}
 
 		if (SimplexChat.instance.getConfig().getBoolean("modules.chatformat.flood.enable") && !sender.hasPermission("chat.chatformat.flood.bypass")) {
 			if (MessageManager.isFlood((Player) sender, msg)) {
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', SimplexChat.instance.getConfig().getString("modules.chatformat.flood.message")));
+				MessageSender.sendMessage(sender, SimplexChat.instance.getConfig().getString("modules.chatformat.flood.message"));
 
 				return this;
 			}
@@ -70,7 +66,7 @@ public class Mensagem {
 	}
 
 	public Mensagem preparar() {
-		String formato = ChatColor.translateAlternateColorCodes('&', canal.getFormat());
+		String formato = canal.getFormat();
 		mensagemString = mensagem[0];
 		if (mensagem.length>1) {
 			for (int i = 1;i<mensagem.length;i++) {
@@ -78,15 +74,13 @@ public class Mensagem {
 			}
 		}
 
-		if (sender!=null) if (sender.hasPermission("chat.colored")) {
-			mensagemString = ChatColor.translateAlternateColorCodes('&', mensagemString);
-		} else {
-			mensagemString = ChatColor.stripColor(mensagemString).replace("", "")
+		assert sender != null;
+		if (!sender.hasPermission("chat.colored")) {
+			mensagemString = ChatColor.stripColor(mensagemString)
 					.replace("show_entity=", "")
 					.replace("show_item=", "")
 					.replace("&", "")
-					.replace("color", "")
-					;
+					.replace("color", "");
 		}
 
 		if (SimplexChat.useFilter && !sender.hasPermission("chat.filter.bypass")) {
@@ -122,7 +116,7 @@ public class Mensagem {
 		if (sender!=null) formato = formato.replace("<player>", sender.getName());
 
 		String replacedMessage = PlaceholderAPI.setPlaceholders(sender, formato).replace("<br>", "\n");
-		mensagemFinal = MineDown.parse(replacedMessage.trim().replaceAll(" +", " "));
+		mensagemFinal = replacedMessage.trim().replaceAll(" +", " ");
 		
 		if (SimplexChat.instance.getConfig().getBoolean("log_to_console")) {
 			consoleMsg = SimplexChat.instance.getConfig().getString("console_log");
@@ -156,20 +150,20 @@ public class Mensagem {
 		}
 		
 		if (canal.isRestrict()) {
-			recebedores.stream().filter(r -> r.hasPermission(canal.getPermission())).forEach(r -> r.spigot().sendMessage(mensagemFinal));
+			recebedores.stream().filter(r -> r.hasPermission(canal.getPermission())).forEach(r -> MessageSender.sendMessage(sender, r, mensagemFinal));
 		} else {
-			recebedores.stream().forEach(r -> r.spigot().sendMessage(mensagemFinal));
+			recebedores.stream().forEach(r -> MessageSender.sendMessage(sender, r, mensagemFinal));
 		}
 		
 		if (canal.useActionbar()) {
-			String actionMessage = quantia>1 ? 
-					ChatColor.translateAlternateColorCodes('&', SimplexChat.instance.getConfig().getString("amount_readed").replace("<amount>", (quantia-1)+""))
-					: ChatColor.translateAlternateColorCodes('&', SimplexChat.instance.getConfig().getString("no_one"));
+			String actionMessage = quantia>1
+					? SimplexChat.instance.getConfig().getString("amount_readed").replace("<amount>", (quantia-1)+"")
+					: SimplexChat.instance.getConfig().getString("no_one");
 
 			if (SimplexChat.getInstance().getServer().getVersion().contains("1.8")) {
 				ActionBar.sendActionBar(sender, actionMessage);
 			} else {
-				sender.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(actionMessage));
+				MessageSender.sendActionBar(sender, actionMessage);
 			}
 		}
 		if (SimplexChat.instance.getConfig().getBoolean("log_to_console")) {

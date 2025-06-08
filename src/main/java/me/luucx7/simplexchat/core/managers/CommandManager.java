@@ -1,16 +1,15 @@
 package me.luucx7.simplexchat.core.managers;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-
+import me.luucx7.simplexchat.SimplexChat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.SimpleCommandMap;
-import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.PluginManager;
 
-import me.luucx7.simplexchat.SimplexChat;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.Map;
 
 public class CommandManager {
    
@@ -39,10 +38,10 @@ public class CommandManager {
     }
     
     public void unregister(final String command) {
-		if (SimplexChat.instance.getServer() != null && SimplexChat.instance.getServer().getPluginManager() instanceof SimplePluginManager) {
-			final SimplePluginManager manager = (SimplePluginManager) SimplexChat.instance.getServer().getPluginManager();
+		if (SimplexChat.instance.getServer() != null && SimplexChat.instance.getServer().getPluginManager() instanceof PluginManager) {
+			final PluginManager manager = SimplexChat.instance.getServer().getPluginManager();
 			try {
-				final Field field = SimplePluginManager.class.getDeclaredField("commandMap");
+				final Field field = PluginManager.class.getDeclaredField("commandMap");
 				field.setAccessible(true);
 				cmdMap = (CommandMap) field.get(manager);
 				final Field field2 = SimpleCommandMap.class.getDeclaredField("knownCommands");

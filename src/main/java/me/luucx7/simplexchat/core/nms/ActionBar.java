@@ -1,10 +1,10 @@
 package me.luucx7.simplexchat.core.nms;
 
-import java.lang.reflect.Constructor;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.lang.reflect.Constructor;
 
 public class ActionBar {
 
@@ -38,10 +38,6 @@ public class ActionBar {
     }
 
     public static void sendTitle(Player player, String title, String subtitle, int fadein, int stay, int fadeout) {
-
-        title = ChatColor.translateAlternateColorCodes('&', title);
-        subtitle = ChatColor.translateAlternateColorCodes('&', subtitle);
-
         Class<?> chatSerializer = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0];
         Class<?> chatComponent = getNMSClass("IChatBaseComponent");
         Class<?> packetTitle = getNMSClass("PacketPlayOutTitle");
@@ -74,9 +70,6 @@ public class ActionBar {
     }
 
     public static void sendActionBar(Player player, String message) {
-
-        message = ChatColor.translateAlternateColorCodes('&', message);
-
         Class<?> chatSerializer = getNMSClass("IChatBaseComponent").getDeclaredClasses()[0];
         Class<?> chatComponent = getNMSClass("IChatBaseComponent");
         Class<?> packetActionbar = getNMSClass("PacketPlayOutChat");

@@ -1,16 +1,15 @@
 package me.luucx7.simplexchat.listeners;
 
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-
 import me.luucx7.simplexchat.SimplexChat;
 import me.luucx7.simplexchat.core.api.Channel;
 import me.luucx7.simplexchat.core.managers.ChannelsManager;
 import me.luucx7.simplexchat.core.managers.JogadorManager;
 import me.luucx7.simplexchat.core.model.Mensagem;
+import me.luucx7.simplexchat.core.utils.MessageSender;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class LocalListener implements Listener {
 
@@ -30,7 +29,7 @@ public class LocalListener implements Listener {
 			canal = JogadorManager.get(ev.getPlayer()).getChannel();
 		}
 		if (canal.isRestrict() && !ev.getPlayer().hasPermission(canal.getPermission())) {
-			ev.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', SimplexChat.instance.getConfig().getString("no_permission")));
+			MessageSender.sendMessage(ev.getPlayer(), SimplexChat.instance.getConfig().getString("no_permission"));
 			return;
 		}
 

@@ -1,11 +1,8 @@
 package me.luucx7.simplexchat.core.model.channels;
 
+import me.luucx7.simplexchat.SimplexChat;
 import me.luucx7.simplexchat.core.api.Local;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import me.luucx7.simplexchat.SimplexChat;
-import me.luucx7.simplexchat.core.api.Channel;
-import net.md_5.bungee.api.ChatColor;
 
 public class LocalImpl implements Local {
 
@@ -39,7 +36,7 @@ public class LocalImpl implements Local {
 		if (config.isSet("local.restrict")) this.restrito = config.getBoolean("local.restrict");
 		this.raio = config.getInt("local.radius");
 		this.permissao = config.getString("local.permission");
-		this.formato = ChatColor.translateAlternateColorCodes('&', config.getString("local.format"));
+		this.formato = config.getString("local.format");
 		if (config.isSet("local.actionbar")) this.actionbar = config.getBoolean("local.actionbar");
 
 		if (config.isSet("local.command")) comando = config.getString("local.command");

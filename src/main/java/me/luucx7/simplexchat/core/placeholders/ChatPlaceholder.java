@@ -1,15 +1,14 @@
 package me.luucx7.simplexchat.core.placeholders;
 
-import java.util.regex.Matcher;
-
-import org.bukkit.entity.Player;
-
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.luucx7.simplexchat.SimplexChat;
 import me.luucx7.simplexchat.commands.Cores;
 import me.luucx7.simplexchat.core.api.Channel;
 import me.luucx7.simplexchat.core.managers.JogadorManager;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.util.regex.Matcher;
 
 /**
  * This class will be registered through the register-method in the 
@@ -99,7 +98,7 @@ public class ChatPlaceholder extends PlaceholderExpansion {
 	 * <br>Since version 2.9.1 can you use OfflinePlayers in your requests.
 	 *
 	 * @param  player
-	 *         A {@link org.bukkit.Player Player}.
+	 *         A {@link Player Player}.
 	 * @param  identifier
 	 *         A String containing the identifier/value.
 	 *
@@ -113,13 +112,13 @@ public class ChatPlaceholder extends PlaceholderExpansion {
 		switch (identifier) {
 		case "color":
 			String color = JogadorManager.get(player).getColor();
-			if (color=="") {
+			if (color == "") {
 				return "";
 			}
 			if (validateRGB(color)) {
-				return ""+ChatColor.of(color);
+				return ""+ ChatColor.of(color);
 			}
-			return ""+ChatColor.translateAlternateColorCodes('&', color);
+			return "" + color;
 		case "channel":
 			Channel canal = JogadorManager.get(player).getChannel();
 			return canal.getName().substring(0, 1).toUpperCase()+canal.getName().substring(1);

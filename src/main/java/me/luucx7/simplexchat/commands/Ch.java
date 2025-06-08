@@ -1,18 +1,17 @@
 package me.luucx7.simplexchat.commands;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-
 import me.luucx7.simplexchat.SimplexChat;
-import net.md_5.bungee.api.ChatColor;
+import me.luucx7.simplexchat.core.api.Channel;
+import me.luucx7.simplexchat.core.managers.ChannelsManager;
+import me.luucx7.simplexchat.core.managers.JogadorManager;
+import me.luucx7.simplexchat.core.utils.MessageSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.luucx7.simplexchat.core.api.Channel;
-import me.luucx7.simplexchat.core.managers.ChannelsManager;
-import me.luucx7.simplexchat.core.managers.JogadorManager;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
 
 public class Ch extends Command {
 
@@ -23,11 +22,11 @@ public class Ch extends Command {
 	@Override
 	public boolean execute(CommandSender s, String c, String[] args) {
 		if (!(s instanceof Player)) {
-			s.sendMessage(getMessage("players_only"));
+			MessageSender.sendMessage(s, getMessage("players_only"));
 			return true;
 		}
 		if (args.length==0) {
-			s.sendMessage(getMessage("channel_command_usage"));
+			MessageSender.sendMessage(s, getMessage("channel_command_usage"));
 			return true;
 		}
 		Optional<Channel> chOp = ChannelsManager.canaisCache.keySet().stream().filter(k -> {
@@ -38,7 +37,7 @@ public class Ch extends Command {
 		}).findAny();
 
 		if (!chOp.isPresent() || chOp.get().isRestrict() && !s.hasPermission(chOp.get().getPermission())) {
-			s.sendMessage(getMessage("invalid_channel"));
+			MessageSender.sendMessage(s, getMessage("invalid_channel"));
 			return true;
 		}
 
@@ -47,7 +46,7 @@ public class Ch extends Command {
 
 		JogadorManager.get(p).setChannel(ch);
 
-		s.sendMessage(ChatColor.translateAlternateColorCodes('&', SimplexChat.getInstance().getConfig().getString("channel_changed").replace("<channelName>", ch.getName()).replace("<channelCommand>", ch.getCommand())));
+		MessageSender.sendMessage(s, SimplexChat.getInstance().getConfig().getString("channel_changed").replace("<channelName>", ch.getName()).replace("<channelCommand>", ch.getCommand()));
 		return false;
 	}
 
@@ -73,6 +72,6 @@ public class Ch extends Command {
 	}
 
 	public static String getMessage(String path) {
-		return ChatColor.translateAlternateColorCodes('&', SimplexChat.getInstance().getConfig().getString(path));
+		return SimplexChat.getInstance().getConfig().getString(path);
 	}
 }
